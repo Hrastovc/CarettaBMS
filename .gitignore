@@ -1,11 +1,19 @@
 
-CarettaBMS/Debug/*
-!CarettaBMS/Debug/Makefile
+CellModule/CarettaBMS/Debug/*
+!CellModule/CarettaBMS/Debug/Makefile
 
-CarettaBMS/Release/*
-!CarettaBMS/Release/Makefile
+CellModule/CarettaBMS/Release/*
+!CellModule/CarettaBMS/Release/Makefile
 
 *.atsuo
 
-doxygen/output
-CarettaBMS_ReferenceManual.pdf
+CellModule/doxygen/output
+CellModule/CarettaBMS_ReferenceManual.pdf
+
+CellModule/Hardware/AltiumProject/*
+!CellModule/Hardware/AltiumProject/CarettaBMS.PrjPCB
+!CellModule/Hardware/AltiumProject/CarettaBMS.PrjPCBStructure
+!CellModule/Hardware/AltiumProject/CarettaBMS.PrjPCBVariants
+!CellModule/Hardware/AltiumProject/CarettaCellModule.PcbDoc
+!CellModule/Hardware/AltiumProject/CarettaCellModule.SchDoc
+!CellModule/Hardware/AltiumProject/Gerber.OutJob
