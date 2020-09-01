@@ -1,0 +1,11 @@
+
+CarettaBMS/Debug/*
+!CarettaBMS/Debug/Makefile
+
+CarettaBMS/Release/*
+!CarettaBMS/Release/Makefile
+
+*.atsuo
+
+doxygen/output
+CarettaBMS_ReferenceManual.pdf
