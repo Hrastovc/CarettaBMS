@@ -14,7 +14,7 @@
 #define CMD_13 (uint8_t)('?')
 
 #define CMD_ALARM_INTERVAL     (uint8_t)('A') /* 0x41 */
-#define CMD_ALARM_CONT_SINGLE  (uint8_t)('B') /* 0x42 */
+#define CMD_GOTO_BOOTLOADER    (uint8_t)('B') /* 0x42 */
 #define CMD_VOLTAGE_CAL        (uint8_t)('c') /* 0x63 */
 #define CMD_BALANCE_CURRENT    (uint8_t)('D') /* 0x44 */
 #define CMD_EXT_TEMPERATURE    (uint8_t)('e') /* 0x65 */

@@ -3,8 +3,8 @@
 :: - DoxyGen (doxygen.exe)
 :: - Graphviz (dot.exe)
 :: - MikTex (pdflatex.exe)
-if exist ..\CarettaBMS_ReferenceManual.pdf del ..\CarettaBMS_ReferenceManual.pdf
+if exist ..\..\Doc\CarettaBMS_ReferenceManual.pdf del ..\..\Doc\CarettaBMS_ReferenceManual.pdf
 doxygen.exe Doxyfile
 call .\output\latex\make.bat
-call copy .\output\latex\refman.pdf ..\CarettaBMS_ReferenceManual.pdf
+call copy .\output\latex\refman.pdf ..\..\Doc\CarettaBMS_ReferenceManual.pdf
 ::pause

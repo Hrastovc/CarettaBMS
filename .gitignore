@@ -8,7 +8,7 @@ CellModule/CarettaBMS/Release/*
 *.atsuo
 
 CellModule/doxygen/output
-CellModule/CarettaBMS_ReferenceManual.pdf
+Doc/CarettaBMS_ReferenceManual.pdf
 
 CellModule/Hardware/AltiumProject/*
 !CellModule/Hardware/AltiumProject/CarettaBMS.PrjPCB

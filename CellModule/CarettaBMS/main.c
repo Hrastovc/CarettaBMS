@@ -11,6 +11,23 @@
 /************************************************************************************//**
 * \file       main.c
 * \brief      CarettaBMS, Open source BMS
+* \internal
+*----------------------------------------------------------------------------------------
+*                                    L I C E N S E
+*----------------------------------------------------------------------------------------
+* This file is part of CarettaBMS. CarettaBMS is free software: you can redistribute it
+* and/or modify it under the terms of the GNU General Public License version 3 as
+* published by the Free Software Foundation.
+*
+* CarettaBMS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+* without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+* PURPOSE. See the GNU General Public License for more details.
+*
+* You have received a copy of the GNU General Public License along with CarettaBMS. It
+* should be located in ".\Doc\license.md". If not, check on gitHub repository to obtain
+* a copy.
+*
+* \endinternal
 ****************************************************************************************/
 
 
@@ -181,8 +198,7 @@ int main(void)
   EVSYS_ASYNCUSER1 = EVSYS_ASYNCUSER1_SYNCCH0_gc;
   
   /* Read user row */
-  moduleNum = 0x00;
-  //moduleNum = readUserRow(UR_MODULE_NUMBER_pos);
+  moduleNum = readUserRow(UR_MODULE_NUMBER_ADDR);
   
   /* FIFO init */
   FIFOinit(&RXfifo, RXbuffer, RX_BUFFER_SIZE);
@@ -206,10 +222,10 @@ int main(void)
     }
     
     /*  */
-    else if(ch == CMD_ALARM_CONT_SINGLE)
-    {
+    //else if(ch == CMD_ALARM_CONT_SINGLE)
+    //{
       
-    }
+    //}
     
     /*  */
     else if(ch == CMD_VOLTAGE_CAL)
@@ -342,7 +358,7 @@ int main(void)
     /*  */
     else if(ch == CMD_CELL_VOLTAGE)
     {
-      volatile uint16_t val = cellVoltage;
+      volatile uint16_t val = cellVoltage + 1;
       respond((uint8_t)val);
       respond((uint8_t)(val >> 8));
     }
@@ -372,8 +388,10 @@ int main(void)
     }
     
     /*  */
-    else if(ch == Cmnd_STK_GET_SYNC)
+    else if(ch == CMD_GOTO_BOOTLOADER)
     {
+      respond(0xEB);
+      forwardBufferIfNotBot();
       goToBootloader();
     }
     
@@ -591,8 +609,9 @@ uint8_t readWait(void)
 ****************************************************************************************/
 void goToBootloader(void)
 {
-  syncResponse();
+  //syncResponse();
   writeUserRow1byte(UR_BOOTLOADER_CONDITION_ADDR, 0xEB);
+  for(volatile uint16_t i = 0xFFFF; i; i--);
   while(!(USART0_STATUS & USART_TXCIF_bm));
   _PROTECTED_WRITE(RSTCTRL_SWRR, RSTCTRL_SWRE_bm);
 } /*** end of goToBootloader ***/
@@ -798,6 +817,9 @@ ISR(USART0_RXC_vect)
     while(!(USART0_STATUS & USART_DREIF_bm));
     USART0_TXDATAH = 0x01;
     USART0_TXDATAL = 0xFE;
+    while(!(USART0_STATUS & USART_TXCIF_bm));
+    USART0_TXDATAH = 0x01;
+    USART0_TXDATAL = moduleNum;
     while(!(USART0_STATUS & USART_TXCIF_bm));
     sequenceError();
   }
