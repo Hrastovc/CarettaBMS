@@ -2,6 +2,23 @@
 * \file       FIFO.c
 * \brief      This module implements a FIFO buffer.
 * \ingroup    CarettaBMSFIFO
+* \internal
+*----------------------------------------------------------------------------------------
+*                                    L I C E N S E
+*----------------------------------------------------------------------------------------
+* This file is part of CarettaBMS. CarettaBMS is free software: you can redistribute it
+* and/or modify it under the terms of the GNU General Public License version 3 as
+* published by the Free Software Foundation.
+*
+* CarettaBMS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+* without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+* PURPOSE. See the GNU General Public License for more details.
+*
+* You have received a copy of the GNU General Public License along with CarettaBMS. It
+* should be located in ".\Doc\license.md". If not, check on gitHub repository to obtain
+* a copy.
+*
+* \endinternal
 ****************************************************************************************/
 
 /****************************************************************************************
