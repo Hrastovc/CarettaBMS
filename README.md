@@ -18,18 +18,18 @@ The work was released as an open source project with the name CarettaBMS. The pu
 
 # specifications
 
-Operating voltage range: od 1.8V do 5.0V
-Operating temperture range: od 0°C do 80°C
-Voltage measurement accuracy: ±10mV
-Voltage measurement resolution: at least 3mV
-Temperature measurement accuracy: ±5°C
-PCB size: 65mm × 18mm × 5mm
-Pasive cell balancing current: 1A
-load characteristics: R = 3.6Ω, P~max~ = 4W
-Maximum of series connected cells: up to 256
-Temperature sensors: at least 3 sensors per module (1 internal, 2 external) or up to 32 I2C sensors
-Comunication intergace (cell modules with master): isolated UART 8E2 (documented protocol)
-Bootloader for future infield firmware upgrades
+Operating voltage range: od 1.8V do 5.0V\
+Operating temperture range: od 0°C do 80°C\
+Voltage measurement accuracy: ±10mV\
+Voltage measurement resolution: at least 3mV\
+Temperature measurement accuracy: ±5°C\
+PCB size: 65mm × 18mm × 5mm\
+Pasive cell balancing current: 1A\
+load characteristics: R = 3.6Ω, P~max~ = 4W\
+Maximum of series connected cells: up to 256\
+Temperature sensors: at least 3 sensors per module (1 internal, 2 external) or up to 32 I2C sensors\
+Comunication intergace (cell modules with master): isolated UART 8E2 (documented protocol)\
+Bootloader for future infield firmware upgrades\
 
 # Cell Module
 ![enter image description here](https://lh3.googleusercontent.com/pw/ACtC-3c2fUZxI_gzC2w3IJYHB17Ieo5sSghVB1DCFiqprrKGjAsjlA3z2c1yILERjq1eG8U84jEvjWz5RBbkoycMlxdKpXT9QEH2yXEYr3CSb4LkigQ8I1HedWclGtvBs_9rG6EiEaH0F6gFOdXFeXLpDZOJ3Q=w245-h881-no?authuser=0)
