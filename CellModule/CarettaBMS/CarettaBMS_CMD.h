@@ -93,8 +93,8 @@
 #define CMD_EMPTY_VOLTAGE      (uint8_t)('X') /* 0x58 */
 #define CMD_EMPTY_RECOVER      (uint8_t)('y') /* 0x79 */
 #define CMD_CHARGED_VOLTAGE    (uint8_t)('z') /* 0x7A */
-#define CMD_059 (uint8_t)('[')
-#define CMD_060 (uint8_t)(']')
+#define CMD_TOP_MODULE         (uint8_t)('[') /* 0x5B */
+#define CMD_NOT_TOP_MODULE     (uint8_t)(']') /* 0x5D */
 #define CMD_061 (uint8_t)('^')
 #define CMD_062 (uint8_t)('|')
 /* END OF ASCII CMDs */

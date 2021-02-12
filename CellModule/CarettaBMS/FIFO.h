@@ -36,6 +36,7 @@ typedef struct
 {
   uint8_t * buffer;
   uint16_t size;
+  uint8_t * end;
   uint8_t * head;
   uint8_t * tail;
 }FIFO_t;

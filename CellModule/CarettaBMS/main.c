@@ -99,7 +99,7 @@ typedef struct
   volatile uint8_t sleepRequested;
   /* program global variables */
   volatile uint8_t moduleNum;
-  volatile uint8_t waitForParameters;
+  volatile uint8_t topModule;
   volatile uint16_t targetVoltage;
   volatile uint32_t cellVoltage;
   volatile uint16_t intTemp;
@@ -127,12 +127,12 @@ void forwardBufferIfNotBot(void);
 void forward(uint8_t data);
 uint8_t readSave(void);
 void resetProcessor(void);
-void oneByteParameter(volatile uint8_t *parameter);
 void twoByteParameter(volatile uint16_t *parameter);
 void writeUserRow1byte(volatile uint8_t *addr, uint8_t val);
 void emptyAlarmQ(void);
 void createAlarm(uint8_t code);
-void respondOK(void);
+void respondOK(uint8_t respSize);
+void respondOKnoPayload(void);
 void emptyOutgoingBuffer(void);
 void setMeasureInterval(uint16_t interval);
 void task(tSettings *p);
@@ -153,55 +153,55 @@ FIFO_t alarmQ;
 uint8_t alarmBuffer[ALARM_BUFFER_SIZE];
 
 tSettings EEMEM defaultSettings = {
-  1500,
-   100,
-    60,
-     5,
-  4300,
-  4200,
-  4200,
-  4150,
-  3200,
-  3300,
-  2500,
-  2600,
-  1000,
-  3600,
-  4300,
-    50,
-     0,
-     0,
-     0,
-  5000,
-     0,
-     0,
- {0, 0}
+  1500,  //vrefCalibrated
+    10,  //balanceCurrent
+    60,  //maxTempBMS
+     5,  //maxTempBMSRecover
+  4300,  //voltLimitHigh
+  4200,  //voltLimitHighRecover
+  4200,  //voltageCharged
+  4150,  //voltageChargedRecover
+  3200,  //voltageEmpty
+  3300,  //voltageEmptyRecover
+  2500,  //voltLimitLow
+  2600,  //voltLimitLowRecover
+  1000,  //measureInterval
+  3600,  //voltBalanceStart
+  4300,  //voltBalanceStop
+    50,  //balanceHysteresis
+     0,  //sleepRequested
+     0,  //moduleNum
+     0,  //topModule
+  5000,  //targetVoltage
+     0,  //cellVoltage
+     0,  //intTemp
+ {0, 0}  //ADCextInput[2]
 };
 
 tSettings EEMEM storedSettings = {
-  1500,
-  100,
-  60,
-  5,
-  4300,
-  4200,
-  4200,
-  4150,
-  3200,
-  3300,
-  2500,
-  2600,
-  1000,
-  3600,
-  4300,
-  50,
-  0,
-  0,
-  0,
-  5000,
-  0,
-  0,
-  {0, 0}
+  1500,  //vrefCalibrated
+    10,  //balanceCurrent
+    60,  //maxTempBMS
+     5,  //maxTempBMSRecover
+  4300,  //voltLimitHigh
+  4200,  //voltLimitHighRecover
+  4200,  //voltageCharged
+  4150,  //voltageChargedRecover
+  3200,  //voltageEmpty
+  3300,  //voltageEmptyRecover
+  2500,  //voltLimitLow
+  2600,  //voltLimitLowRecover
+  1000,  //measureInterval
+  3600,  //voltBalanceStart
+  4300,  //voltBalanceStop
+    50,  //balanceHysteresis
+     0,  //sleepRequested
+     0,  //moduleNum
+     0,  //topModule
+  5000,  //targetVoltage
+     0,  //cellVoltage
+     0,  //intTemp
+ {0, 0}  //ADCextInput[2]
 };
 
 tSettings settings;
@@ -262,7 +262,6 @@ int main(void)
   settings.moduleNum = readUserRow(UR_MODULE_NUMBER_ADDR);
   
   /* Init. global variables. */
-  settings.waitForParameters = 0;
   settings.targetVoltage = 5000;
   
   /* RTC init */
@@ -353,9 +352,12 @@ int main(void)
     /* Respond with all the external temperatures. */
     else if(ch == CMD_EXT_INPUTS)
     {
-      respondOK();
-      respondTwoBytes(settings.ADCextInput[0]);
-      respondTwoBytes(settings.ADCextInput[1]);
+      respondOK(0x04);
+      for(uint8_t i; i < 2; i++)
+      {
+        respond((uint8_t)settings.ADCextInput[i]);
+        respond((uint8_t)(settings.ADCextInput[i] >> 8));
+      }
     }
     
     /*  */
@@ -422,7 +424,23 @@ int main(void)
     else if(ch == CMD_GOTO_SLEEP)
     {
       settings.sleepRequested = 0x01;
-      respondOK();
+      respondOKnoPayload();
+    }
+    
+    /*  */
+    else if(ch == CMD_TOP_MODULE)
+    {
+      settings.topModule = 0x01;
+      respondOKnoPayload();
+      emptyOutgoingBuffer();
+      forward(CMD_NOT_TOP_MODULE);
+    }
+    
+    /*  */
+    else if(ch == CMD_NOT_TOP_MODULE)
+    {
+      settings.topModule = 0x00;
+      respondOKnoPayload();
     }
     
     /*  */
@@ -438,7 +456,7 @@ int main(void)
       settings.moduleNum = readWait() - 1;
       writeUserRow1byte(UR_MODULE_NUMBER_ADDR, settings.moduleNum);
       FIFOaddToBuffer(&TXfifo, settings.moduleNum);
-      respondOK();
+      respondOKnoPayload();
     }
     
     /*  */
@@ -466,20 +484,20 @@ int main(void)
       settings.moduleNum = readUserRow(UR_MODULE_NUMBER_ADDR);
       eeprom_write_block(&settings, &storedSettings, sizeof(tSettings));
       setMeasureInterval(settings.measureInterval);
-      respondOK();
+      respondOKnoPayload();
     }
     
     /* Take module to sleep */
     else if(ch == CMD_SAVE_SETTINGS)
     {
       eeprom_write_block(&settings, &storedSettings, sizeof(tSettings));
-      respondOK();
+      respondOKnoPayload();
     }
     
     /* Respond with temperature reading of processors internal sensor. */
     else if(ch == CMD_INT_TEMPERATURE)
     {
-      respondOK();
+      //respondOK(0x02);
       respondTwoBytes(settings.intTemp);
     }
     
@@ -493,7 +511,7 @@ int main(void)
     else if(ch == CMD_CELL_VOLTAGE)
     {
       while(!settings.cellVoltage);
-      respondOK();
+      //respondOK(0x02);
       respondTwoBytes(settings.cellVoltage);
     }
     
@@ -501,7 +519,7 @@ int main(void)
     else if(ch == CMD_WAKE_UP_SYNC)
     {
       settings.sleepRequested = 0x00;
-      respondOK();
+      respondOKnoPayload();
     }
     
 #ifdef USE_I2C
@@ -511,7 +529,7 @@ int main(void)
     {
       if(settings.moduleNum == readSave())
       {
-        respondOK();
+        respondOKnoPayload();
         /* 100kHz @ 3.33MHz per. clk. */
         TWI0_MBAUD = 10;
         /* Enable TWI as master without any interrupts. */
@@ -527,7 +545,7 @@ int main(void)
     {
       if(settings.moduleNum == readSave())
       {
-        respondOK();
+        respondOK(0x01);
         respond(TWI0_MSTATUS);
         emptyOutgoingBuffer();
       }
@@ -543,7 +561,7 @@ int main(void)
         if(rdWr > 0x01) respond(ERROR_SEQUENCE);
         else
         {
-          respondOK();
+          respondOK(0x01);
           /* Send START condition */
           TWI0_MADDR = (uint8_t)(address << 1) | (rdWr & 0x01);
           /* Wait for write or read interrupt flag */
@@ -567,7 +585,7 @@ int main(void)
     {
       if(settings.moduleNum == readSave())
       {
-        respondOK();
+        respondOKnoPayload();
         /* Send STOP */
         TWI0_MCTRLB = TWI_ACKACT_bm | TWI_MCMD_STOP_gc;
         emptyOutgoingBuffer();
@@ -580,7 +598,7 @@ int main(void)
       if(settings.moduleNum == readSave())
       {
         uint8_t data = readSave();
-        respondOK();
+        respondOK(0x01);
         /* Wait for write complete interrupt flag */
         while(!(TWI0_MSTATUS & TWI_WIF_bm));
         /* Copy data to master data register. */
@@ -606,7 +624,7 @@ int main(void)
         if(nack > 0x01) respond(ERROR_SEQUENCE);
         else
         {
-          respondOK();
+          respondOK(0x01);
           /* Wait for read complete interrupt flag */
           while(!(TWI0_MSTATUS & TWI_RIF_bm));
           /* Copy data from master data register. */
@@ -636,15 +654,22 @@ int main(void)
       emptyOutgoingBuffer();
     }
     
-    settings.waitForParameters = 0x00;
     forwardBufferIfNotBot();
   }
 } /*** end of main ***/
 
 
-void respondOK(void)
+void respondOK(uint8_t respSize)
 {
   respond(RESP_OK);
+  respond(respSize);
+}
+
+
+void respondOKnoPayload(void)
+{
+  respond(RESP_OK);
+  respond(0x00);
 }
 
 
@@ -808,9 +833,10 @@ void task(tSettings *p)
       balancingCondition = (p->cellVoltage > p->targetVoltage);
       
       if(!overTempCondition && !p->sleepRequested)
+      //if(!p->sleepRequested)
       {
         TCA0_SINGLE_CMP0 = p->balanceCurrent;
-      }        
+      }
       else
       {
         TCA0_SINGLE_CMP0 = 0x00;
@@ -878,16 +904,15 @@ void twoByteParameter(volatile uint16_t *parameter)
   {
     *parameter = readSave();
     *parameter |= readSave() << 8;
-    respondOK();
+    respondOKnoPayload();
   }
   else if(rdWr == 'r')
   {
-    respondOK();
+    //respondOK(0x02);
     respondTwoBytes(*parameter);
   }
   else
   {
-    settings.waitForParameters = 0x00;
     emptyOutgoingBuffer();
     respond(ERROR_SEQUENCE);
   }
@@ -919,7 +944,7 @@ uint8_t readWait(void)
     if((RTC_INTFLAGS & RTC_CMP_bm))
     {
       /* Reset counter and set interval */
-      if(!settings.waitForParameters) setMeasureInterval(settings.measureInterval);
+      setMeasureInterval(settings.measureInterval);
       /* Clear the int. flag. */
       RTC_INTFLAGS = RTC_CMP_bm;
       /* Do the work */
@@ -1044,6 +1069,7 @@ void respond(uint8_t data)
 ****************************************************************************************/
 void respondTwoBytes(uint16_t data)
 {
+  respondOK(0x02);
   respond((uint8_t)data);
   respond((uint8_t)(data >> 8));
 } /*** end of respond ***/
@@ -1095,9 +1121,8 @@ ISR(USART0_RXC_vect)
   }
   else if(status & USART_RXCIF_bm)
   {
-    if((status & 0x01) | settings.waitForParameters)
+    if((status & 0x01) | settings.topModule)
     {
-      settings.waitForParameters = 0x01;
       FIFOaddToBuffer(&RXfifo, data);
     }
     else

@@ -50,6 +50,7 @@ void FIFOinit(FIFO_t *p, uint8_t *buffer, uint16_t size)
 {
   p->buffer = buffer;
   p->size = size;
+  p->end = p->buffer + p->size - 1;
   p->head = buffer;
   p->tail = buffer;
 } /*** end of FIFOinit ***/
@@ -74,8 +75,8 @@ void FIFOflush(FIFO_t *p)
 ****************************************************************************************/
 uint8_t FIFOincreaseHead(FIFO_t *p)
 {
-  if( p->head < (p->buffer + (p->size - 1)) ) p->head++;
-  else  p->head = p->buffer;
+  p->head++;
+  if(p->head > p->end) p->head = p->buffer;
   return (p->head != p->tail);
 } /*** end of FIFOincreaseHead ***/
 
@@ -88,8 +89,8 @@ uint8_t FIFOincreaseHead(FIFO_t *p)
 ****************************************************************************************/
 uint8_t FIFOincreaseTail(FIFO_t *p)
 {
-  if( p->tail < (p->buffer + (p->size - 1)) ) p->tail++;
-  else  p->tail = p->buffer;
+  p->tail++;
+  if(p->tail > p->end) p->tail = p->buffer;
   return (p->head != p->tail);
 } /*** end of FIFOincreaseTail ***/
 
@@ -104,8 +105,7 @@ uint8_t FIFOincreaseTail(FIFO_t *p)
 uint8_t FIFOaddToBuffer(FIFO_t *p, uint8_t data)
 {
   *(p->head) = data;
-  FIFOincreaseHead(p);
-  return (p->head != p->tail);
+  return FIFOincreaseHead(p);
 } /*** end of FIFOaddToBuffer ***/
 
 
