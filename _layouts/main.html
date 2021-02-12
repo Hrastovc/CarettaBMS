@@ -34,7 +34,7 @@
           <h2 id="project_tagline">CarettaBMS is the best price to performance battery management system and it’s also open-source.</h2>
 
           {% for page in site.pages %}
-            <a href={{ index.md }}>{{ Intro }}</a>
+            <a href={{ page.filename }}>{{ page.title }}</a>
           {% endfor %}
         </header>
     </div>
