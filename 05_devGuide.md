@@ -110,9 +110,7 @@ void task(tSettings *p)
 }
 ```
 
-All the received commands are saved in a buffer. Once the command has been
-handled buffer with the command is forwarded to the next module. But if this
-is the bottom module commands don't need to be forwarded.
+All the received commands are saved in a buffer. Once the command has been handled buffer with the command is forwarded to the next module. But if this is the bottom module commands don't need to be forwarded.
 
 ```C
 void forwardBufferIfNotBot(void)
