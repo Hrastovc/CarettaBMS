@@ -2,6 +2,7 @@
 page_name: UARTcom
 title: UART
 layout: main
+filename: UARTcom.md
 ---
 # Non-isolated UART communication
 
