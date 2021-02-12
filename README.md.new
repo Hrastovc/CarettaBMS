@@ -43,6 +43,7 @@ packs to a wider audience.
 
 # specifications
 
+<<<<<<< HEAD
  - Operating voltage range: od 1.8V do 5.0V
  - Operating temperature range: od 0°C do 80°C
  - Voltage measurement accuracy: ±10mV
@@ -57,6 +58,20 @@ or up to 32 I2C sensors
  - Communication interface (cell modules with master): isolated UART 8E2
 (documented protocol)
  - Bootloader for future infield firmware upgrades
+=======
+Operating voltage range: od 1.8V do 5.0V\
+Operating temperture range: od 0°C do 80°C\
+Voltage measurement accuracy: ±10mV\
+Voltage measurement resolution: at least 3mV\
+Temperature measurement accuracy: ±5°C\
+PCB size: 65mm × 18mm × 5mm\
+Pasive cell balancing current: 1A\
+load characteristics: R = 3.6Ω, P~max~ = 4W\
+Maximum of series connected cells: up to 256\
+Temperature sensors: at least 3 sensors per module (1 internal, 2 external) or up to 32 I2C sensors\
+Comunication intergace (cell modules with master): isolated UART 8E2 (documented protocol)\
+Bootloader for future infield firmware upgrades\
+>>>>>>> fca61be833ccb18ec107ebcd14fdcd5ea822a96e
 
 # Cell Module
 ![Cell module PCB](https://raw.githubusercontent.com/Hrastovc/CarettaBMS/gh-pages/images/CarettaCellModule_PCB.png)
@@ -65,6 +80,10 @@ Schematic: https://github.com/Hrastovc/CarettaBMS/blob/master/CellModule/Hardwar
 
 # License
 
+<<<<<<< HEAD
 CarettaBMS is free software: you can redistribute it and/or modify it under the
 terms of the GNU General Public License version 3 as published by the Free
 Software Foundation.
+=======
+CarettaBMS is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License version 3 as published by the Free Software Foundation.
+>>>>>>> fca61be833ccb18ec107ebcd14fdcd5ea822a96e
