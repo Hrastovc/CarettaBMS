@@ -1,6 +1,6 @@
 ---
-page_name: index
-title: CarettaBMS
+filename: index
+title: Overview
 layout: main
 ---
 # CarettaBMS
