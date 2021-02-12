@@ -1,8 +1,3 @@
----
-page_name: index
-title: CarettaBMS
-layout: main
----
 # CarettaBMS
 
 CarettaBMS is the best price to performance battery management system and it's
