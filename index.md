@@ -28,7 +28,7 @@ The work was released as an open source project with the name CarettaBMS. The pu
  - Temperature measurement accuracy: ±5°C
  - PCB size: 65mm × 18mm × 5mm
  - Passive cell balancing current: 1A
- - load characteristics: R = 3.6Ω, P<sub>max</sub> = 4W
+ - Load characteristics: R = 3.6Ω, P<sub>max</sub> = 4W
  - Maximum of series connected cells: up to 256
  - Temperature sensors: at least 3 sensors per module (1 internal, 2 external)
 or up to 32 I2C sensors
